@@ -61,7 +61,7 @@ typedef int64_t limb;
  *
  * Field elements are written as an array of signed, 64-bit limbs, least
  * significant first. The value of the field element is:
- *   x[0] + 2^26·x[1] + x^51·x[2] + 2^102·x[3] + ...
+ *   x[0] + 2^26?x[1] + x^51?x[2] + 2^102?x[3] + ...
  *
  * i.e. the limbs are 26, 25, 26, 25, ... bits wide.
  */
@@ -720,9 +720,6 @@ curve25519_donna(u8 *mypublic, const u8 *secret, const u8 *basepoint) {
   int i;
 
   for (i = 0; i < 32; ++i) e[i] = secret[i];
-  e[0] &= 248;
-  e[31] &= 127;
-  e[31] |= 64;
 
   fexpand(bp, basepoint);
   cmult(x, z, e, bp);
@@ -732,3 +729,4 @@ curve25519_donna(u8 *mypublic, const u8 *secret, const u8 *basepoint) {
   fcontract(mypublic, z);
   return 0;
 }
+

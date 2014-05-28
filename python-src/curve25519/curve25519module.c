@@ -20,15 +20,22 @@ int curve25519_donna(char *mypublic,
 static PyObject *
 pycurve25519_makeprivate(PyObject *self, PyObject *args)
 {
+	int ephemeral;
     char *in1;
     Py_ssize_t in1len;
-    if (!PyArg_ParseTuple(args, y"#:clamp", &in1, &in1len))
+    if (!PyArg_ParseTuple(args, y"#i", &in1, &in1len, &ephemeral))
         return NULL;
     if (in1len != 32) {
         PyErr_SetString(PyExc_ValueError, "input must be 32-byte string");
         return NULL;
     }
-    in1[0] &= 248;
+
+	if (ephemeral != 0){
+    	in1[0] |= 1;
+	} else {
+		in1[0] &= 248;
+	}
+
     in1[31] &= 127;
     in1[31] |= 64;
     return PyBytes_FromStringAndSize((char *)in1, 32);

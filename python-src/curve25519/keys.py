@@ -10,7 +10,7 @@ def _hash_shared(shared):
     return sha256(b"curve25519-shared:"+shared).digest()
 
 class Private:
-    def __init__(self, secret=None, seed=None):
+    def __init__(self, secret=None, seed=None, ephemeral=0):
         if secret is None:
             if seed is None:
                 secret = os.urandom(32)
@@ -20,7 +20,7 @@ class Private:
             assert seed is None, "provide secret, seed, or neither, not both"
         if not isinstance(secret, bytes) or len(secret) != 32:
             raise TypeError("secret= must be 32-byte string")
-        self.private = _curve25519.make_private(secret)
+        self.private = _curve25519.make_private(secret, ephemeral)
 
     def serialize(self):
         return self.private
